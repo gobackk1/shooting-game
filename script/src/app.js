@@ -11,6 +11,7 @@ import Boss from './modules/class/Boss';
 import state from './modules/state';
 import { zeroPadding, degToRad, generateRandomInt } from './modules/util'
 
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 700;
@@ -52,14 +53,29 @@ window.addEventListener('load', () => {
 	let bgmButton = document.querySelector('#btn-bgm');
 	let bgm = document.querySelector('#bgm');
 
-	startButton.addEventListener('click', async () => {
+	// startButton.addEventListener('click', async () => {
+	// 	startButton.disabled = true;
+	// 	sound = new Sound();
+
+	// 	await sound.load('../../sound/small_explosion1.mp3');
+	// 	initialize();
+	// 	loadCheck();
+	// });
+	startButton.addEventListener('click', () => {
 		startButton.disabled = true;
 		sound = new Sound();
-
-		await sound.load('../../sound/small_explosion1.mp3');
-		initialize();
-		loadCheck();
-	});
+		sound.load('./sound/small_explosion1.mp3', (error) => {
+			// もしエラーが発生した場合はアラートを表示して終了する
+			if(error != null){
+				alert('ファイルの読み込みエラーです');
+				return;
+			}
+			// 初期化処理を行う
+			initialize();
+			// インスタンスの状態を確認する
+			loadCheck();
+		});
+	}, false);
 
 	bgmButton.addEventListener('click', () => {
 		if (!bgmLoaded) {
