@@ -12,6 +12,8 @@ import state from './modules/state';
 import { zeroPadding, degToRad, generateRandomInt } from './modules/util'
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
+console.log(window.AudioContext)
+console.log(window.fetch)
 
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 700;
@@ -53,29 +55,15 @@ window.addEventListener('load', () => {
 	let bgmButton = document.querySelector('#btn-bgm');
 	let bgm = document.querySelector('#bgm');
 
-	// startButton.addEventListener('click', async () => {
-	// 	startButton.disabled = true;
-	// 	sound = new Sound();
-
-	// 	await sound.load('../../sound/small_explosion1.mp3');
-	// 	initialize();
-	// 	loadCheck();
-	// });
-	startButton.addEventListener('click', () => {
+	startButton.addEventListener('click', async () => {
 		startButton.disabled = true;
 		sound = new Sound();
-		sound.load('./sound/small_explosion1.mp3', (error) => {
-			// もしエラーが発生した場合はアラートを表示して終了する
-			if(error != null){
-				alert('ファイルの読み込みエラーです');
-				return;
-			}
-			// 初期化処理を行う
-			initialize();
-			// インスタンスの状態を確認する
-			loadCheck();
-		});
-	}, false);
+
+		await sound.load('https://kksample.sakura.ne.jp/invader/sound/small_explosion1.mp3');
+		// await sound.load('../../sound/small_explosion1.mp3');
+		initialize();
+		loadCheck();
+	});
 
 	bgmButton.addEventListener('click', () => {
 		if (!bgmLoaded) {
@@ -104,7 +92,7 @@ window.addEventListener('load', () => {
 function initialize() {
 	let i;
 
-	viper = new Viper(ctx, 0, 0, 64, 64, '../../image/viper_2.png');
+	viper = new Viper(ctx, 0, 0, 64, 64, 'https://kksample.sakura.ne.jp/invader/image/viper_2.png');
 	viper.setComing(
 		CANVAS_WIDTH / 2,
 		CANVAS_HEIGHT,
@@ -120,39 +108,39 @@ function initialize() {
 	}
 
 	for (i = 0; i < SHOT_MAX_COUNT; i++){
-		shotArray[i] = new Shot(ctx, 0, 0, 32, 32, '../../image/viper_shot_normal_2.png');
+		shotArray[i] = new Shot(ctx, 0, 0, 32, 32, 'https://kksample.sakura.ne.jp/invader/image/viper_shot_normal_2.png');
 		shotArray[i].setSpeed(8.5);
-		singleShotArray[i * 2] = new Shot(ctx, 0, 0, 32, 32, '../../image/viper_shot_normal_2.png');
+		singleShotArray[i * 2] = new Shot(ctx, 0, 0, 32, 32, 'https://kksample.sakura.ne.jp/invader/image/viper_shot_normal_2.png');
 		singleShotArray[i * 2].setSpeed(8);
-		singleShotArray[i * 2 + 1] = new Shot(ctx, 0, 0, 32, 32, '../../image/viper_shot_normal_2.png');
+		singleShotArray[i * 2 + 1] = new Shot(ctx, 0, 0, 32, 32, 'https://kksample.sakura.ne.jp/invader/image/viper_shot_normal_2.png');
 		singleShotArray[i * 2 + 1].setSpeed(8);
 	}
 
 	for (i = 0; i < ENEMY_SHOT_MAX_COUNT; i++){
-		enemyShotArray[i] = new Shot(ctx, 0, 0, 24, 24, '../../image/enemy_shot_1.png');
+		enemyShotArray[i] = new Shot(ctx, 0, 0, 24, 24, 'https://kksample.sakura.ne.jp/invader/image/enemy_shot_1.png');
 		enemyShotArray[i].setTargetArray([viper]);
 		enemyShotArray[i].setExplosionArray(explosionArray);
 	}
 
 	for (i = 0; i < HOMING_MAX_COUNT; i++){
-		homingArray[i] = new Homing(ctx, 0, 0, 32, 32, '../../image/enemy_homing_shot.png');
+		homingArray[i] = new Homing(ctx, 0, 0, 32, 32, 'https://kksample.sakura.ne.jp/invader/image/enemy_homing_shot.png');
 		homingArray[i].setTargetArray([viper]);
 		homingArray[i].setExplosionArray(explosionArray);
 	}
 
-	boss = new Boss(ctx, 0, 0, 128, 128, '../../image/boss_1.png');
+	boss = new Boss(ctx, 0, 0, 128, 128, 'https://kksample.sakura.ne.jp/invader/image/boss_1.png');
 	boss.setShotArray(enemyShotArray);
 	boss.setHomingArray(homingArray);
 	boss.setAttackTarget(viper);
 
 	for (i = 0; i < ENEMY_SMALL_MAX_COUNT; i++){
-		enemyArray[i] = new Enemy(ctx, 0, 0, 48, 48, '../../image/enemy_small_1.png');
+		enemyArray[i] = new Enemy(ctx, 0, 0, 48, 48, 'https://kksample.sakura.ne.jp/invader/image/enemy_small_1.png');
 		enemyArray[i].setShotArray(enemyShotArray);
 		enemyArray[i].setAttackTarget(viper);
 	}
 
 	for (i = 0; i < ENEMY_LARGE_MAX_COUNT; i++){
-		enemyArray[ENEMY_SMALL_MAX_COUNT + i] = new Enemy(ctx, 0, 0, 64, 64, '../../image/enemy_large_1.png');
+		enemyArray[ENEMY_SMALL_MAX_COUNT + i] = new Enemy(ctx, 0, 0, 64, 64, 'https://kksample.sakura.ne.jp/invader/image/enemy_large_1.png');
 		enemyArray[ENEMY_SMALL_MAX_COUNT + i].setShotArray(enemyShotArray);
 		enemyArray[ENEMY_SMALL_MAX_COUNT + i].setAttackTarget(viper);
 	}
